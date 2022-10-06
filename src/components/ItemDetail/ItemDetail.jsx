@@ -38,25 +38,26 @@ export const ItemDetail = () => {
               <Card  bg='dark' text='light' style={{ width: '18rem' }}>
                 <Card.Title as='h4' className="mb-2 mt-4 p-3">{nombre}</Card.Title>
                 <Card.Img className='card-img p-4' variant="top" src={imagen} />
-                <Card.Body>
-                                                      
-                <Card.Subtitle as='h5' className="mb-2">
-                  Precio: $ {precio}
-                </Card.Subtitle>
-                  <p>{detalleu}</p>
-                  <p>{detalled}</p>
-                  <p>{detallet}</p>
+                  <Card.Body>                                  
+                    <Card.Subtitle as='h5' className="mb-2">
+                      Precio: $ {precio}
+                    </Card.Subtitle>
 
-                <Card.Footer>Stock: {stock}</Card.Footer>
-                <div className="d-grid gap-2">
-                {(count <= (stock-1)) ? <Button onClick={() => setCount((count) => count + 1)}>
-                  +
-                </Button> : <Button size="sm" disabled variant='danger'> No se puede agregar Items </Button>}
-          {count}
-          { (count >= 1) ? <Button onClick={() => setCount((count) => count - 1)}> - </Button> : <Button size="sm" disabled variant='danger'> No se puede restar Items </Button>} 
-          <Button>Agregar Al Carrito</Button></div>
-                                                      </Card.Body>
-                                                </Card>
-                                              </div>  
+                      <p>{detalleu}</p>
+                      <p>{detalled}</p>
+                      <p>{detallet}</p>
+
+                    <Card.Footer>Stock: {stock}</Card.Footer>
+
+                    <div className="d-grid gap-2">
+                    {(count <= (stock-1)) ? <Button onClick={() => setCount((count) => count + 1)}>
+                      +
+                    </Button> : <Button size="sm" disabled variant='danger'> No se puede agregar Items </Button>}
+                      {count}
+                    { (count >= 2) ? <Button onClick={() => setCount((count) => count - 1)}> - </Button> : <Button size="sm" disabled variant='danger'> No se puede restar Items </Button>} 
+                    <Button>Agregar Al Carrito</Button></div>
+                  </Card.Body>
+              </Card>
+          </div>  
   )
 }
