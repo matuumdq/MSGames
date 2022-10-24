@@ -12,6 +12,14 @@
 
 .card-img{
       height: 230px;
+      padding: 25px;
+}
+
+.card-img-carrito{
+      height: 230px;
+      width: 250px;
+      padding: 25px;
+      margin: 10px;
 }
 
 .card-producto{
@@ -93,4 +101,22 @@
 
 .nav-sp>a:hover{
   color: grey
+}
+
+.col-cont {
+  text-align: center;
+  flex-wrap: wrap;
+}
+
+.center-div{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.column-div{
+  width: 200px;
+  display: flex;
+  flex-direction: column;
 }

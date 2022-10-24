@@ -274,7 +274,7 @@ const productos = [
 
 
 
-    export const gFetch = () => {
+    export const gFetch = (id) => {
       return new Promise((res, rej) => {
         // acciones que se ejecutan(sync o async)
         setTimeout(() => {

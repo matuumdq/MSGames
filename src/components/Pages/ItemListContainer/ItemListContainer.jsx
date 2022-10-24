@@ -1,73 +1,92 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { gFetch } from '../../../helpers/gFetch'
-import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
-import ListGroup from 'react-bootstrap/ListGroup'
+import { useCartContext } from "../../context/cartContext";
+import { collection, doc, getDoc, getDocs, getFirestore, limit, orderBy, query, where } from 'firebase/firestore'
+import ItemList from "../../ItemList/ItemList";
+import Loading from "../../Loading/Loading";
+
 
 const ItemListContainer = () => {
-      const [ productos, setProductos ] = useState([])
-      const [ loading, setLoading ] = useState(true)
+    const [ productos, setProductos ] = useState({})
+    const [ loading, setLoading ] = useState(true)
   
-      const {idCategoria} = useParams()
+    const {idCategoria} = useParams()
+// Todos los productos
+
+useEffect(() => {
+        const db = getFirestore()
+        const queryCollection = collection(db, 'productos')
+        getDocs(queryCollection)
+        .then(resp => setProductos(resp.docs.map(prod => ({ id: prod.id, ...prod.data() }) ))) 
+        .catch(() => console.log(err))
+        .finally(() => setLoading(false))
+    },[])
+
+    console.log(productos)
 
 
-      useEffect(()=>{
-          if (idCategoria) {
-            gFetch()  
-            .then(resSgte => setProductos(resSgte.filter(producto=>producto.categoria===idCategoria)))
-            .catch(err => console.log(err))
+// un prod de firebase
+    // useEffect(() => {
+    //   const db = getFirestore()
+    //   const queryDoc = doc(db, 'productos', 'DQI3UNleLD3DZElHNwwE')
+    //   getDoc(queryDoc)
+    //     .then(resp=> console.log(resp => ({id: resp.id, ...resp.data()})))
+    //     .catch(()=>console.error())
+    //     .finally(()=> setLoading(false))
+    // }, [])
+    
+
+    // productos filtrados
+
+      useEffect(()=> {
+        if (idCategoria){
+        const db = getFirestore()
+        const queryCollector = collection(db, 'productos')
+
+        const queryFilter = query(queryCollector, where('categoria', '==', idCategoria))
+        
+        // const queryFilter = query(queryCollector, where('precio', '>', 85000), limit(5), orderBy('precio', 'desc'))
+
+        getDocs(queryFilter)
+            .then(resp => setProductos(resp.docs.map(prod=>({id:prod.id, ...prod.data()}))))
+
+            .catch(()=>console.error())
             .finally(()=> setLoading(false))
-          } else {
-                  gFetch()  
-                  .then(resSgte => setProductos(resSgte))
-                  .catch(err => console.log(err))
-                  .finally(()=> setLoading(false))
-          }
+        } else {
+            const db = getFirestore()
+            const queryCollector = collection(db, 'productos')
+            getDocs(queryCollector)
+            .then(resp => setProductos(resp.docs.map(prod=>({...prod.data()}))))
+            .catch(()=>console.error())
+            .finally(()=> setLoading(false))
+        }
+      },[idCategoria])
+
+    //   useEffect(()=>{
+    //       if (idCategoria) {
+    //         gFetch()  
+    //             .then(resSgte => setProductos(resSgte.filter(producto=>producto.categoria===idCategoria)))
+    //             .catch(err => console.log(err))
+    //             .finally(()=> setLoading(false))
+    //       } else {
+    //         gFetch()  
+    //             .then(resSgte => setProductos(resSgte))
+    //             .catch(err => console.log(err))
+    //             .finally(()=> setLoading(false))
+    //       }
           
-      }, [idCategoria])
+    //   }, [idCategoria])
 
 
       return (
           <div className='card-prod m-auto'>
 
               { loading ? 
-                <div className="sk-chase">
-                    <div className="sk-chase-dot"></div>
-                    <div className="sk-chase-dot"></div>
-                    <div className="sk-chase-dot"></div>
-                    <div className="sk-chase-dot"></div>
-                    <div className="sk-chase-dot"></div>
-                    <div className="sk-chase-dot"></div>
-                </div> 
+                    <Loading/>
                       :
-                  productos.map( prod => 
-                                            <div 
-                                                  key={prod.id}
-                                                  style={{ marginLeft: 70}}
-                                                  className='card-producto text-center'
-                                                  
-                                              >          
-                                                  <Card 
-                                                    bg='dark'
-                                                    text='light'
-                                                    border= 'primary'
-                                                    className="m-card"
-                                                    style={{ width: '19rem' }}>
-                                                      <Card.Title className="mb-3 p-4" as='h4'>{prod.nombre}</Card.Title>
-                                                      <Card.Img className='card-img p-4' variant="top" src={prod.imagen}/>
-                                                      <Card.Body>
-                                                      
-                                                      <Card.Text as='h5' className="mb-2 mt-4">
-                                                            Precio: $ {prod.precio}
-                                                      </Card.Text>
-                                                      <Card.Footer>
-                                                      <Link to={`/item/${prod.id}`}><Button className='rounded-pill' variant="primary">Detalles</Button></Link>
-                                                      </Card.Footer>
-                                                      </Card.Body>
-                                                </Card>
-                                              </div> 
-                  ) 
+                    //   <h1>Cargando</h1>
+                    <ItemList productos={productos} />
+                //   productos.map (prod => <Item prod={prod}/>) 
               }
           </div>
       )

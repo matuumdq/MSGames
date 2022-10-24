@@ -18,7 +18,6 @@ const NavBar = () => {
               src="../favicon.ico"
               width="30"
               height="30"
-              // className="d-inline-block align-top"
             />
             MSGames
           </Navbar.Brand></Link>
