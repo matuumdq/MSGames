@@ -7,7 +7,7 @@ import Loading from "../../Loading/Loading";
 
 
 const ItemListContainer = () => {
-    const [ productos, setProductos ] = useState({})
+    const [ productos, setProductos ] = useState()
     const [ loading, setLoading ] = useState(true)
   
     const {idCategoria} = useParams()
