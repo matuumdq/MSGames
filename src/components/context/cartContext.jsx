@@ -9,28 +9,27 @@ const CartContextProvider = ({children}) => {
 
       const [cartList, setCartList] = useState([])
 
-
       const addItem = (producto) => {
-            console.log(producto)
             const estaCarrito = (cartList.findIndex(prod => prod.id === producto.id) )
-            console.log(estaCarrito)
             if(estaCarrito<0){
                   setCartList([...cartList, producto])
             } else {
                   // cartList[estaCarrito].count = cartList[estaCarrito].count + producto.count
                   const nuevaCant = cartList[estaCarrito].count + producto.count
                   if(nuevaCant > cartList[estaCarrito].stock){
-                        return (
-                              <h1>No se Puede Superar el Stock</h1>
-                        )
+                              console.log('No se Puede Superar el stock')
                   } else {
-                        cartList[estaCarrito].count = cartList[estaCarrito].count + producto.count 
+                        cartList[estaCarrito].count = cartList[estaCarrito].count + producto.count
                   }
             }
       }
 
       const vaciarCarrito = () => {
-            setCartList([])
+            const confirmar = confirm('Desea Vaciar el carrito?')
+            if (confirmar){
+                  setCartList([])
+                  return
+            }
       }
 
       const precioTotal = () => {
@@ -38,11 +37,15 @@ const CartContextProvider = ({children}) => {
         }
 
       const cantidadTotal = () => {
-            return cartList.reduce((acum, prod) => acum += prod.count , 0)// acum = acum + cantidad
+            return cartList.reduce((acum, prod) => acum += prod.count , 0)
       }
 
       const removeItem= (id) => {
+            const confirmar = confirm('Desea eliminar el articulo?')
+            if (confirmar){
             setCartList( cartList.filter(prod => prod.id !== id) )
+            return
+            }
         }
 
 

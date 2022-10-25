@@ -7,7 +7,6 @@ import Loading from "../../Loading/Loading";
 
 
 const ItemListContainer = () => {
-    let resultado = ''
     const [ productos, setProductos ] = useState({})
     const [ loading, setLoading ] = useState(true)
   
@@ -63,7 +62,6 @@ const ItemListContainer = () => {
             .finally(()=> setLoading(false))
         }
       },[idCategoria])
-      console.log(productos)
 
     //   useEffect(()=>{
     //       if (idCategoria) {
@@ -84,13 +82,12 @@ const ItemListContainer = () => {
       return (
           <div className='card-prod m-auto' >
 
-              { loading ? 
-                    <Loading/>
-                      :
-                    //   <h1>Cargando</h1>
-                    <ItemList productos={productos} />
+            {loading ? 
+                <Loading/>
+            :
+                <ItemList productos={productos} />
                 //   productos.map (prod => <Item prod={prod}/>) 
-              }
+            }
           </div>
       )
   }

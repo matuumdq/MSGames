@@ -3,7 +3,6 @@ import Item from "../Item/Item"
 
 
 const ItemList = ({productos}) => {
-    console.log(productos)
         return (
             <div
                className="card-prod"

@@ -1,10 +1,37 @@
-.bg {
+.detalle {
       height: 100vh;
-      background-color: #D8D9CF;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+
 }
 
-.detail {
-      padding: 50px;
+.detallado{
+      display: flex;
+      width: 800px;
+      justify-content: space-around;
+      align-items: center;
+      border: 5px solid #828282;
+      border-radius: 15px;
+}
+
+img {
+      margin-left: auto;
+      margin-right: auto;
+}
+
+.titulo {
+      font-size: 25px;
       font-family: 'Lato', sans-serif;
+      font-weight: bold;
+}
+
+.texto-detalle{
+      font-size: 20px;
+      text-align: start;
+}
+
+.centrar-boton {
       text-align: center;
 }

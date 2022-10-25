@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 
 
 const Item = ({prod}) => {
-  console.log(prod.id)
   return (
     <>  
         <div 
@@ -18,7 +17,7 @@ const Item = ({prod}) => {
                 bg='dark'
                 text='light'
                 border= 'primary'
-                className="m-card "
+                className="m-card margin-card"
                 style={{ width: '19rem' }}>
                   <Card.Title className="mb-3 p-4" as='h4'>{prod.nombre}</Card.Title>
                   <Card.Img className='card-img p-4' variant="top" src={prod.imagen}/>

@@ -1,19 +1,14 @@
-import { gFetch } from '../../helpers/gFetch'
 import { Link, useParams } from "react-router-dom"
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
 import { useCartContext } from '../context/cartContext';
-import ItemCount from '../ItemCount/ItemCount';
-import { doc, getDoc, getFirestore } from 'firebase/firestore';
-import Loading from '../Loading/Loading';
+import ItemCount from '../ItemCount/ItemCount'
 import './ItemDetail.css'
 
 
 
 
 export const  ItemDetail = ({productos}) => {
-console.log(productos)
       // estados
       const [count, setCount] = useState(1)
       const [isCount, setIsCount] = useState(true)
@@ -72,44 +67,34 @@ console.log(productos)
 
      const {nombre, imagen, precio, detalleu, detalled, detallet, stock, id} = productos
 
-        const onAdd = (count) => {
-            console.log(count)
-            addItem ({...productos, count})
-            setIsCount(false)
-        }
+     const onAdd = (count) => {
+        addItem ({...productos, count})
+        setIsCount(false)
+    }
 
   return (  
-    <>
-    <div className='center-div bg'>    
+   
+    <div className='detalle'>  
+        <div className='detallado'>
             <div 
                 key={id}
                 className='detail'>                                         
-                <p>{nombre}</p> 
+                <p className="titulo">{nombre}</p> 
                 <img src={imagen} 
                 style={{ width: '15rem', display: 'block' }}/>
-                Precio: $ {precio}
+                <h3>Precio: $ {precio}</h3>
 
-                <p>{detalleu}</p>
-                <p>{detalled}</p>
-                <p>{detallet}</p>
-                <p> Ultimas <span style={{color:'red'}}>{stock} unidades en Stock!</span></p>     
+                <p className="texto-detalle">{detalleu}</p>
+                <p className="texto-detalle">{detalled}</p>
+                <p className="texto-detalle">{detallet}</p>
+                <p className="texto-detalle"> Ultimas <span style={{color:'red'}}>{stock} unidades en Stock!</span></p>     
 
             </div> 
-            <div className=''>
-                <div className="column-div text-center">
-                    {(count <= (stock-1)) ? <Button onClick={() => setCount(count + 1)}>
-                        + 
-                    </Button> 
-                        : 
-                    <Button size="sm" disabled variant='danger'> No se puede agregar Items </Button>}<br/>
-                        {count}
-                        <br/><br/>{(count > 1) ? <Button onClick={() => setCount(count - 1)}> - </Button> : <Button size="sm" disabled variant='danger'> No se puede restar Items </Button>} 
-                   
-                        <br/>
-                        {isCount ? 
-                        <Button variant='success' onClick={()=> onAdd(count)}><ItemCount/></Button>
-                            :
-                        <div>
+            <div className='centrar-boton'>
+            {isCount ?  
+                    <ItemCount onAdd={onAdd} stock={productos.stock} />
+                        :
+                    <div>
                             <br/>
                             <Link to='/'>
                             <Button>Seguir Comprando</Button>
@@ -120,10 +105,8 @@ console.log(productos)
                             </Link>
                         </div>
                     }
-                </div>
             </div>
-            
-        </div> 
-    </>
+        </div>   
+    </div> 
   )
 }

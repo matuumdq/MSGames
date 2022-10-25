@@ -9,10 +9,6 @@ export const ItemDetailContainer = () => {
  const { idProducto } = useParams()
   const [ productos, setProductos ] = useState({})
   const [ loading, setLoading ] = useState(true)
-
-  console.log(idProducto)
-
-
   // useEffect(() => {
   //   const db = getFirestore()
   //   const queryDoc = doc(db, 'productos', idProducto)
@@ -42,19 +38,15 @@ export const ItemDetailContainer = () => {
       .then(resp => setProductos( {id: resp.id, ...resp.data()} ))
       .catch(err => console.log(err))
       .finally(() => setLoading(false))
-  },[])
-    console.log(productos)
+    },[])
 
   return (
     <div>
-      { loading ? 
-                    <Loading/>
-                      
-                    :
-                     
-                    <ItemDetail productos={productos} />
-              }
-      
+        {loading ? 
+            <Loading/>
+        :
+            <ItemDetail productos={productos} />
+        }
     </div>
-  )
+    )
 }

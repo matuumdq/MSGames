@@ -1,6 +1,6 @@
 #root {
       min-height: 100vh;
-      background-color: #787878;
+      background-color: #D8D9CF;
 }
 
 .card-prod{
@@ -121,4 +121,8 @@
   width: 200px;
   display: flex;
   flex-direction: column;
+}
+
+.margin-card{
+   margin: 50px;
 }
