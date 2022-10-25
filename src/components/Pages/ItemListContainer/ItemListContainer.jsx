@@ -7,22 +7,23 @@ import Loading from "../../Loading/Loading";
 
 
 const ItemListContainer = () => {
-    const [ productos, setProductos ] = useState()
+    let resultado = ''
+    const [ productos, setProductos ] = useState({})
     const [ loading, setLoading ] = useState(true)
   
     const {idCategoria} = useParams()
 // Todos los productos
 
-useEffect(() => {
-        const db = getFirestore()
-        const queryCollection = collection(db, 'productos')
-        getDocs(queryCollection)
-        .then(resp => setProductos(resp.docs.map(prod => ({ id: prod.id, ...prod.data() }) ))) 
-        .catch(() => console.log(err))
-        .finally(() => setLoading(false))
-    },[])
+// useEffect(() => {
+//         const db = getFirestore()
+//         const queryCollection = collection(db, 'productos')
+//         getDocs(queryCollection)
+//         .then(resp => setProductos(resp.docs.map(prod => ({ id: prod.id, ...prod.data() }) )))
+//         .catch(err => console.log(err))
+//         .finally(() => setLoading(false))
+//     },[])
 
-    console.log(productos)
+//     console.log(productos)
 
 
 // un prod de firebase
@@ -55,12 +56,14 @@ useEffect(() => {
         } else {
             const db = getFirestore()
             const queryCollector = collection(db, 'productos')
-            getDocs(queryCollector)
-            .then(resp => setProductos(resp.docs.map(prod=>({...prod.data()}))))
+            const queryFilter = query(queryCollector, orderBy('categoria', 'asc'))
+            getDocs(queryFilter)
+            .then(resp => setProductos(resp.docs.map(prod=>({id: prod.id, ...prod.data()}))))
             .catch(()=>console.error())
             .finally(()=> setLoading(false))
         }
       },[idCategoria])
+      console.log(productos)
 
     //   useEffect(()=>{
     //       if (idCategoria) {
@@ -79,7 +82,7 @@ useEffect(() => {
 
 
       return (
-          <div className='card-prod m-auto'>
+          <div className='card-prod m-auto' >
 
               { loading ? 
                     <Loading/>

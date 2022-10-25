@@ -6,11 +6,7 @@ const ItemList = ({productos}) => {
     console.log(productos)
         return (
             <div
-                style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    flexWrap: 'wrap',
-                }}
+               className="card-prod"
             >
                 {productos.map( 
                     prod => <Item key={prod.id} prod={prod} /> 

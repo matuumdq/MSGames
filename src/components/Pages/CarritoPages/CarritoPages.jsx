@@ -2,9 +2,6 @@ import { doc, getFirestore, updateDoc } from "firebase/firestore"
 import { useState } from "react"
 import { useCartContext } from "../../context/cartContext"
 
-// import  useContext from 'react'
-// import CartContext from '../context/cartContext'
-
 
 export default function CarritoPage(){
 
@@ -33,8 +30,7 @@ export default function CarritoPage(){
   // .then(resp=> console.log('prod act'))
   // .catch(err=> console.log(err))
 
-
-  const { cartList, vaciarCarrito } = useCartContext()
+  const { cartList, vaciarCarrito, precioTotal } = useCartContext()
   console.log(cartList)
 
   const [tot, setTot] = useState(0)
@@ -44,8 +40,13 @@ export default function CarritoPage(){
 
       <h1>Carrito</h1>
       <ul><p>
-        {cartList.map(producto => <li> {<img className='card-img-carrito' src={producto.imagen} alt="" /> } Producto: {producto.nombre} {producto.categoria} precio: {producto.precio} Cantidad: {producto.count} </li> )}</p>
+        {cartList.map(producto => <li> {<img className='card-img-carrito' src={producto.imagen} alt="" /> } 
+        Producto: {producto.nombre} {producto.categoria} Precio: {producto.precio}  Cantidad: {producto.count} </li> 
+      )}</p>
       </ul>
+
+      <h3>Total: {precioTotal()}</h3>
+
       <button onClick={vaciarCarrito}>Vaciar carrito</button>
     </div>
   )

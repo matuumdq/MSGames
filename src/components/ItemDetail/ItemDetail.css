@@ -1,0 +1,10 @@
+.bg {
+      height: 100vh;
+      background-color: #D8D9CF;
+}
+
+.detail {
+      padding: 50px;
+      font-family: 'Lato', sans-serif;
+      text-align: center;
+}

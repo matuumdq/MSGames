@@ -23,9 +23,11 @@ const NavBar = () => {
           </Navbar.Brand></Link>
           <Nav className="pr-4">
             <div className='nav-sp'> <Link to='/category/monitor'> Monitores </Link> </div>
-            <div className='nav-sp'> <Link to='/category/placa-video'> Placas de video </Link> </div>  
+            <div className='nav-sp'> <Link to='/category/placa-video'> Placas de video </Link> </div>
+            <div className='nav-sp'> <Link to='/category/memoria'> Memoria RAM </Link> </div>  
             <div className='nav-sp'> <Link to='/category/disco'> Discos </Link> </div>  
             <div className='nav-sp'> <Link to='/category/motherboard'> Motherboards </Link> </div>  
+            <div className='nav-sp'> <Link to='/category/fuente'> Fuentes</Link> </div> 
             <div className='nav-sp'> <Link to='/category/procesadores'> Procesadores </Link> </div>  
             <div className='nav-sp'> <Link to='/category/gabinete'> Gabinetes </Link></div>  
           </Nav>

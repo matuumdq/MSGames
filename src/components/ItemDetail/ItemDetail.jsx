@@ -7,11 +7,13 @@ import { useCartContext } from '../context/cartContext';
 import ItemCount from '../ItemCount/ItemCount';
 import { doc, getDoc, getFirestore } from 'firebase/firestore';
 import Loading from '../Loading/Loading';
+import './ItemDetail.css'
+
 
 
 
 export const  ItemDetail = ({productos}) => {
-
+console.log(productos)
       // estados
       const [count, setCount] = useState(1)
       const [isCount, setIsCount] = useState(true)
@@ -71,58 +73,57 @@ export const  ItemDetail = ({productos}) => {
      const {nombre, imagen, precio, detalleu, detalled, detallet, stock, id} = productos
 
         const onAdd = (count) => {
-          addItem ({...productos, count})
-          setIsCount(false)
+            console.log(count)
+            addItem ({...productos, count})
+            setIsCount(false)
         }
 
   return (  
-   <div className='center-div'>    
-          <div 
-            key={id}
-            className=''>          
-              <Card  bg='dark' text='light' style={{ width: '18rem' }}>
-                <Card.Title as='h4' className="mb-2 mt-4 p-3">{nombre}</Card.Title>
-                <Card.Img className='card-img p-4' variant="top" src={imagen} />
-                  <Card.Body>                                  
-                    <Card.Subtitle as='h5' className="mb-2">
-                      Precio: $ {precio}
-                    </Card.Subtitle>
+    <>
+    <div className='center-div bg'>    
+            <div 
+                key={id}
+                className='detail'>                                         
+                <p>{nombre}</p> 
+                <img src={imagen} 
+                style={{ width: '15rem', display: 'block' }}/>
+                Precio: $ {precio}
 
-                      <p>{detalleu}</p>
-                      <p>{detalled}</p>
-                      <p>{detallet}</p>
+                <p>{detalleu}</p>
+                <p>{detalled}</p>
+                <p>{detallet}</p>
+                <p> Ultimas <span style={{color:'red'}}>{stock} unidades en Stock!</span></p>     
 
-                    <Card.Footer><p>Ultimas <span  className='resaltado'>{stock} unidades en Stock!</span></p></Card.Footer>
-                  </Card.Body>
-                  </Card>
-
-          </div> 
-          <div className=''>
-                    <div className="column-div text-center">
-                        {(count <= (stock-1)) ? <Button onClick={() => setCount(count + 1)}>
-                          +
-                        </Button> : <Button size="sm" disabled variant='danger'> No se puede agregar Items </Button>}
-                          {count}
-                        {(count > 1) ? <Button onClick={() => setCount(count - 1)}> - </Button> : <Button size="sm" disabled variant='danger'> No se puede restar Items </Button>} 
-
-                       
+            </div> 
+            <div className=''>
+                <div className="column-div text-center">
+                    {(count <= (stock-1)) ? <Button onClick={() => setCount(count + 1)}>
+                        + 
+                    </Button> 
+                        : 
+                    <Button size="sm" disabled variant='danger'> No se puede agregar Items </Button>}<br/>
+                        {count}
+                        <br/><br/>{(count > 1) ? <Button onClick={() => setCount(count - 1)}> - </Button> : <Button size="sm" disabled variant='danger'> No se puede restar Items </Button>} 
+                   
+                        <br/>
                         {isCount ? 
-                          <Button variant='success' onClick={()=> onAdd(count)}><ItemCount/></Button>
-                          :
-                          <div>
+                        <Button variant='success' onClick={()=> onAdd(count)}><ItemCount/></Button>
+                            :
+                        <div>
                             <br/>
-                          <Link to='/'>
+                            <Link to='/'>
                             <Button>Seguir Comprando</Button>
-                          </Link>
-                          <br/><br/>
-                          <Link to='/cart'>
+                            </Link>
+                            <br/><br/>
+                            <Link to='/cart'>
                             <Button>Terminar compra</Button>
-                          </Link>
-                          </div>
-                        }
-                        
-                  </div>
-          </div>
-      </div> 
+                            </Link>
+                        </div>
+                    }
+                </div>
+            </div>
+            
+        </div> 
+    </>
   )
 }

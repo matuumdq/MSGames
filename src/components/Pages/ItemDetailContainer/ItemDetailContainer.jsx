@@ -6,7 +6,7 @@ import  {ItemDetail} from '../../ItemDetail/ItemDetail'
 
 export const ItemDetailContainer = () => {
 
-  const { idProducto } = useParams()
+ const { idProducto } = useParams()
   const [ productos, setProductos ] = useState({})
   const [ loading, setLoading ] = useState(true)
 

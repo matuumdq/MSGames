@@ -18,7 +18,7 @@ const Item = ({prod}) => {
                 bg='dark'
                 text='light'
                 border= 'primary'
-                className="m-card"
+                className="m-card "
                 style={{ width: '19rem' }}>
                   <Card.Title className="mb-3 p-4" as='h4'>{prod.nombre}</Card.Title>
                   <Card.Img className='card-img p-4' variant="top" src={prod.imagen}/>
