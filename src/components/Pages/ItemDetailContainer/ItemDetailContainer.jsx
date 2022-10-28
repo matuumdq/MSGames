@@ -6,9 +6,10 @@ import  {ItemDetail} from '../../ItemDetail/ItemDetail'
 
 export const ItemDetailContainer = () => {
 
- const { idProducto } = useParams()
-  const [ productos, setProductos ] = useState({})
-  const [ loading, setLoading ] = useState(true)
+    const { idProducto } = useParams()
+    const [ productos, setProductos ] = useState({})
+    const [ loading, setLoading ] = useState(true)
+    
   // useEffect(() => {
   //   const db = getFirestore()
   //   const queryDoc = doc(db, 'productos', idProducto)
@@ -32,12 +33,12 @@ export const ItemDetailContainer = () => {
     //traer un producto de firebase
     
     useEffect(() => {
-      const db = getFirestore()
-      const queryDoc = doc(db, 'productos', idProducto)
-      getDoc(queryDoc)
-      .then(resp => setProductos( {id: resp.id, ...resp.data()} ))
-      .catch(err => console.log(err))
-      .finally(() => setLoading(false))
+        const db = getFirestore()
+        const queryDoc = doc(db, 'productos', idProducto)
+        getDoc(queryDoc)
+        .then(resp => setProductos( {id: resp.id, ...resp.data()} ))
+        .catch(err => console.log(err))
+        .finally(() => setLoading(false))
     },[])
 
   return (

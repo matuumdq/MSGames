@@ -1,0 +1,35 @@
+.lista{
+      margin: 15px;
+      list-style: none  ;
+}
+
+.flex-carrito{
+      display: flex;
+      justify-content: space-between;
+      padding: 5px;
+      border: 3px solid black ;
+      border-radius: 15px;
+      margin: 10px;
+}
+
+.footer {
+      text-align: center;
+      margin: 50px;
+}
+
+.flex-lista{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+}
+
+.boton{
+      margin: auto;
+      height: 80px;
+      width: 150px;
+}
+
+.parrafos{
+      font-size: 20px;
+      font-family: 'Lato', sans-serif;
+}

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useCartContext } from "../../context/cartContext";
-import { collection, doc, getDoc, getDocs, getFirestore, limit, orderBy, query, where } from 'firebase/firestore'
+import { collection, getDocs, getFirestore, orderBy, query, where } from 'firebase/firestore'
 import ItemList from "../../ItemList/ItemList";
 import Loading from "../../Loading/Loading";
 
@@ -9,8 +9,8 @@ import Loading from "../../Loading/Loading";
 const ItemListContainer = () => {
     const [ productos, setProductos ] = useState({})
     const [ loading, setLoading ] = useState(true)
-  
-    const {idCategoria} = useParams()
+    const { idCategoria } = useParams()
+
 // Todos los productos
 
 // useEffect(() => {
@@ -36,32 +36,22 @@ const ItemListContainer = () => {
     // }, [])
     
 
-    // productos filtrados
-
-      useEffect(()=> {
-        if (idCategoria){
+    const traerBdd = () => {
         const db = getFirestore()
         const queryCollector = collection(db, 'productos')
-
-        const queryFilter = query(queryCollector, where('categoria', '==', idCategoria))
-        
-        // const queryFilter = query(queryCollector, where('precio', '>', 85000), limit(5), orderBy('precio', 'desc'))
-
+        const queryFilter = idCategoria ? query(queryCollector, where('categoria', '==', idCategoria))
+            : query(queryCollector, orderBy('categoria', 'desc'))
         getDocs(queryFilter)
             .then(resp => setProductos(resp.docs.map(prod=>({id:prod.id, ...prod.data()}))))
+            .catch(()=>console.error())
+            .finally(()=> setLoading(false))
+    }
 
-            .catch(()=>console.error())
-            .finally(()=> setLoading(false))
-        } else {
-            const db = getFirestore()
-            const queryCollector = collection(db, 'productos')
-            const queryFilter = query(queryCollector, orderBy('categoria', 'asc'))
-            getDocs(queryFilter)
-            .then(resp => setProductos(resp.docs.map(prod=>({id: prod.id, ...prod.data()}))))
-            .catch(()=>console.error())
-            .finally(()=> setLoading(false))
-        }
-      },[idCategoria])
+    // Productos filtrados
+
+    useEffect(()=> {
+        traerBdd()
+    },[idCategoria])
 
     //   useEffect(()=>{
     //       if (idCategoria) {
@@ -86,7 +76,6 @@ const ItemListContainer = () => {
                 <Loading/>
             :
                 <ItemList productos={productos} />
-                //   productos.map (prod => <Item prod={prod}/>) 
             }
           </div>
       )

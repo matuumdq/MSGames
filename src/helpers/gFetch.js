@@ -271,7 +271,7 @@ const productos = [
         
     ]
 
-
+   
 
 
     export const gFetch = (id) => {
