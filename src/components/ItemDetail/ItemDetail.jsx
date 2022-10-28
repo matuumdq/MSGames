@@ -92,7 +92,7 @@ export const  ItemDetail = ({productos}) => {
             </div> 
             <div className='centrar-boton'>
             {isCount ?  
-                    <ItemCount onAdd={onAdd} stock={productos.stock} />
+                    <ItemCount onAdd={onAdd} stock={productos.stock} key={id}/>
                         :
                     <div>
                             <br/>

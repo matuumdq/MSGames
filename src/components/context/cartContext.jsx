@@ -20,6 +20,7 @@ const CartContextProvider = ({children}) => {
                               console.log('No se Puede Superar el stock')
                   } else {
                         cartList[estaCarrito].count = cartList[estaCarrito].count + producto.count
+                        setCartList([...cartList])
                   }
             }
       }

@@ -46,7 +46,7 @@ export const ItemDetailContainer = () => {
         {loading ? 
             <Loading/>
         :
-            <ItemDetail productos={productos} />
+            <ItemDetail productos={productos} key={productos.id}/>
         }
     </div>
     )

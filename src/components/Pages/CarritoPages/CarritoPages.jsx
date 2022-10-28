@@ -1,4 +1,4 @@
-import { doc, getFirestore, updateDoc } from "firebase/firestore"
+import { collection, doc, getFirestore, updateDoc } from "firebase/firestore"
 import { useState } from "react"
 import Button from "react-bootstrap/esm/Button"
 import { Link } from "react-router-dom"
@@ -8,21 +8,40 @@ import './CarritoPage.css'
 
 export default function CarritoPage(){
 
-  // const generarOrden = async(e) => {
-  //   e.preventDefault()
-  //   const orden = { 
-  //     buyer: {
-  //       nombre: 'Mateo',
-  //       phone: 11111,
-  //       email: 'mateo@mateo.com'
-  //     },
-  //     items = items.map(prod {
-  //       const {id, name:nombre, precio} = producto
-  //       return
+    const { cartList, vaciarCarrito, precioTotal, removeItem} = useCartContext()
 
-  //     }
-  //   }
-  // }
+    const  [dataForm, setDataForm] = useState({
+        name: '',
+        phone: '',
+        email:''
+
+    })
+
+    const generarOrden = async (e)=>{
+        e.preventDefault()
+
+        console.log('Orden Generada')
+        const orden = {}
+        
+        orden.buyer= {
+            name: dataForm.name,
+            phone: dataForm.phone,
+            email: dataForm.email
+        }
+
+        orden.products= cartList.map(prod => {
+            const {id, name: title, price} = prod
+            return {id, title, price}
+        })
+
+        orden.total= precioTotal()
+
+        const db = getFirestore()
+        const orders = collection(db, 'orders')
+        .then(resp => console.log('resp'))
+        .catch(err => console.log(err))
+        .finally(() => vaciarCarrito())
+    }
 
   //update
   // const db = getFirestore()
@@ -33,14 +52,14 @@ export default function CarritoPage(){
   // .then(resp=> console.log('prod act'))
   // .catch(err=> console.log(err))
 
-  const { cartList, vaciarCarrito, precioTotal, removeItem} = useCartContext()
-
-//   if (cartList.length > 0 ) {
-//     setisCart(true)
-//     return
-//   }
-
-//   console.log(isCart)
+  const handleInputChange = (e) => {
+    console.log(e.target.name)
+    console.log(e.target.value)
+    setDataForm({
+        ...dataForm,
+        [e.target.name]: e.target.value
+    })
+}
 
   return ( 
     <>
@@ -49,10 +68,9 @@ export default function CarritoPage(){
             <h1 style={{textAlign: 'center', marginTop: '40px', marginBottom:'50px'}}>Finaliza tu compra!</h1>
             <ul className="lista">
                 {cartList.map(producto => 
-                <li>
+                <li key={producto.id}>
                     <div 
-                    className="flex-carrito" 
-                    key={producto.id}> 
+                    className="flex-carrito" > 
                         {<img className='card-img-carrito' src={producto.imagen} alt="" /> } 
                         <div className="flex-lista">
                             <p className="parrafos">Producto: {producto.nombre}</p>
@@ -67,6 +85,30 @@ export default function CarritoPage(){
 
             <div className="footer">
             <h3>Total: ${precioTotal()}</h3>
+            <form onSubmit={generarOrden}>
+                <input 
+                    type="text" 
+                    name="name"
+                    placeholder="Nombre" 
+                    value={dataForm.name}
+                    onChange={handleInputChange}
+                />
+                <input 
+                    type="text"
+                    name="phone" 
+                    value={dataForm.phone}
+                    placeholder="Teléfono" 
+                    onChange={handleInputChange}
+                />
+                <input 
+                    type="text" 
+                    name="email"
+                    value={dataForm.email}
+                    placeholder="Email" 
+                    onChange={handleInputChange}
+                />
+                <Button type="submit">Generar Orden</Button>
+            </form>
                 <div className="d-grid ">
                 <Button variant='danger' onClick={vaciarCarrito} size="lg" className="d-grid">Vaciar carrito</Button>
                 </div>   
