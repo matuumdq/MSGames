@@ -15,6 +15,9 @@
 .footer {
       text-align: center;
       margin: 50px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
 }
 
 .flex-lista{
@@ -32,4 +35,38 @@
 .parrafos{
       font-size: 20px;
       font-family: 'Lato', sans-serif;
+}
+
+.carrito-empty {
+      text-align: center;
+      font-size: 40px;
+      font-weight: bold;
+      padding: 10%;
+      font-family: 'Lato', sans-serif;
+}
+
+.order {
+      text-align: center;
+      font-size: 30px;
+      font-family: 'Lato', sans-serif;
+      margin: 20px;
+      color: grey;
+}
+
+.order-span{
+      color: black;
+      font-weight: bold;
+}
+
+.formulario{
+      display: flex;
+      flex-direction: column;
+      width: 500px;
+      margin: 40px 20px;
+}
+
+.formulario>input{
+      margin: 5px;
+      border-radius: 10px;
+      padding: 7px;
 }

@@ -1,4 +1,6 @@
+import { useEffect } from "react"
 import { useContext, createContext, useState } from "react"
+import Error from "../Error/Error"
 
 
 const CartContext = createContext([])
@@ -8,56 +10,70 @@ const CartContextProvider = ({children}) => {
       // estadoGlobal
 
       const [cartList, setCartList] = useState([])
+      const errores = []
 
-      const addItem = (producto) => {
-            const estaCarrito = (cartList.findIndex(prod => prod.id === producto.id) )
-            if(estaCarrito<0){
+      useEffect(()=> {
+            const takeLS = () => {
+                  const LS = JSON.parse(localStorage.getItem('cartList')) ?? []
+                  setCartList(LS)
+            }
+            takeLS()
+      },[])
+
+      useEffect(() => {
+            localStorage.setItem('cartList', JSON.stringify(cartList))
+      }, [cartList])
+      
+
+      const addItem = async(producto) => {
+            const isInCart = (cartList.findIndex(prod => prod.id === producto.id) )
+            if(isInCart<0){
                   setCartList([...cartList, producto])
             } else {
-                  // cartList[estaCarrito].count = cartList[estaCarrito].count + producto.count
-                  const nuevaCant = cartList[estaCarrito].count + producto.count
-                  if(nuevaCant > cartList[estaCarrito].stock){
-                              console.log('No se Puede Superar el stock')
+                  const newCount = cartList[isInCart].count + producto.count
+                  if(newCount > cartList[isInCart].stock){ 
+                        errores.push('No se Puede Superar el stock')
                   } else {
-                        cartList[estaCarrito].count = cartList[estaCarrito].count + producto.count
+                        cartList[isInCart].count = cartList[isInCart].count + producto.count
                         setCartList([...cartList])
                   }
-            }
+            } 
       }
 
-      const vaciarCarrito = () => {
-            const confirmar = confirm('Desea Vaciar el carrito?')
-            if (confirmar){
+      const clearCart = () => {
+            const confirmation = confirm('Desea Vaciar el carrito?')
+            if (confirmation ){
                   setCartList([])
-                  return
             }
       }
 
-      const precioTotal = () => {
+      const totalPrice = () => {
             return cartList.reduce((acum, prod) => acum + (prod.count * prod.precio) , 0)
-        }
+      }
 
-      const cantidadTotal = () => {
+      const totalCount = () => {
             return cartList.reduce((acum, prod) => acum += prod.count , 0)
       }
 
-      const removeItem= (id) => {
-            const confirmar = confirm('Desea eliminar el articulo?')
-            if (confirmar){
+      const removeProd= (id) => {
+            const confirmation  = confirm('Desea eliminar el articulo?')
+            if (confirmation ){
             setCartList( cartList.filter(prod => prod.id !== id) )
             return
             }
-        }
+      }
 
 
       return (
             <CartContext.Provider value = { { 
                   cartList,
+                  setCartList,
                   addItem,
-                  precioTotal,
-                  cantidadTotal,
-                  removeItem,
-                  vaciarCarrito
+                  errores,
+                  totalPrice,
+                  totalCount,
+                  removeProd,
+                  clearCart
             }}>
 
                   {children}

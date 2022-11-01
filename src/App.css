@@ -40,6 +40,7 @@
       margin: 100px auto;
       position: relative;
       animation: sk-chase 2.5s infinite linear both;
+      
     }
     
     .sk-chase-dot {
@@ -48,7 +49,7 @@
       position: absolute;
       left: 0;
       top: 0; 
-      animation: sk-chase-dot 2.0s infinite ease-in-out both; 
+      animation: sk-chase-dot 2.0s infinite ease-in-out both;
     }
     
     .sk-chase-dot:before {
@@ -56,7 +57,7 @@
       display: block;
       width: 25%;
       height: 25%;
-      background-color: #fff;
+      background-color: black;
       border-radius: 100%;
       animation: sk-chase-dot-before 2.0s infinite ease-in-out both; 
     }

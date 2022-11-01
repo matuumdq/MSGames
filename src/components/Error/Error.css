@@ -1,0 +1,12 @@
+.error-cart{
+      text-align: center;
+      margin: 20px auto;
+      height: 40px;
+      width: 300px;
+      background-color: rgb(216, 67, 67);
+      padding: 10px;
+      font-size: 17px;
+      font-weight: bold;
+      color: white;
+      border-radius: 7px;
+} 

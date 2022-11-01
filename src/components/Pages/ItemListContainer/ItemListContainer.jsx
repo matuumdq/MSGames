@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useCartContext } from "../../context/cartContext";
 import { collection, getDocs, getFirestore, orderBy, query, where } from 'firebase/firestore'
 import ItemList from "../../ItemList/ItemList";
 import Loading from "../../Loading/Loading";
@@ -34,9 +33,11 @@ const ItemListContainer = () => {
     //     .catch(()=>console.error())
     //     .finally(()=> setLoading(false))
     // }, [])
-    
 
-    const traerBdd = () => {
+
+    // Productos filtrados
+
+    useEffect(()=> {
         const db = getFirestore()
         const queryCollector = collection(db, 'productos')
         const queryFilter = idCategoria ? query(queryCollector, where('categoria', '==', idCategoria))
@@ -45,12 +46,6 @@ const ItemListContainer = () => {
             .then(resp => setProductos(resp.docs.map(prod=>({id:prod.id, ...prod.data()}))))
             .catch(()=>console.error())
             .finally(()=> setLoading(false))
-    }
-
-    // Productos filtrados
-
-    useEffect(()=> {
-        traerBdd()
     },[idCategoria])
 
     //   useEffect(()=>{

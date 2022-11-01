@@ -1,75 +1,83 @@
-import { Link, useParams } from "react-router-dom"
+import { isRouteErrorResponse, Link, useParams } from "react-router-dom"
 import { useState } from 'react'
 import Button from 'react-bootstrap/Button';
 import { useCartContext } from '../context/cartContext';
 import ItemCount from '../ItemCount/ItemCount'
 import './ItemDetail.css'
+import Error from "../Error/Error";
 
 
 
 
-export const  ItemDetail = ({productos}) => {
-      // estados
-      const [count, setCount] = useState(1)
-      const [isCount, setIsCount] = useState(true)
-      const { addItem } = useCartContext()
-      
-      // useEffect(() => {
-      //   const db = getFirestore()
-      //   const queryDoc = doc(db, 'productos', idProducto)
-      //   getDoc(queryDoc)
-      //     .then(resp=> setProductos({id: resp.id, ...resp.data()}))
-      //     .catch(()=>console.error())
-      //     .finally(()=> setLoading(false))
-      // }, [])
+
+export const  ItemDetail = ({products}) => {
+    // estados
+        const [isCount, setIsCount] = useState(true)
+        const { addItem, errores } = useCartContext()
+        const error = []
+        // useEffect(() => {
+        //   const db = getFirestore()
+        //   const queryDoc = doc(db, 'products', idProducto)
+        //   getDoc(queryDoc)
+        //     .then(resp=> setProductos({id: resp.id, ...resp.data()}))
+        //     .catch(()=>console.error())
+        //     .finally(()=> setLoading(false))
+        // }, [])
 
 
 
-      // useEffect(()=> {
-      //   if (idCategoria){
-      //   const db = getFirestore()
-      //   const queryCollector = collection(db, 'productos')
+        // useEffect(()=> {
+        //   if (idCategoria){
+        //   const db = getFirestore()
+        //   const queryCollector = collection(db, 'products')
 
-      //   const queryFilter = query(queryCollector, where('categoria', '==', idCategoria))
-        
-      //   // const queryFilter = query(queryCollector, where('precio', '>', 85000), limit(5), orderBy('precio', 'desc'))
-
-      //   getDocs(queryFilter)
-      //       .then(resp => setProductos(resp.docs.map(prod=>({id:prod.id, ...prod.data()}))))
-
-      //       .catch(()=>console.error())
-      //       .finally(()=> setLoading(false))
-      //   } else {
-      //       const db = getFirestore()
-      //       const queryCollector = collection(db, 'productos')
-      //       getDocs(queryCollector)
-      //       // .then(resp2=>console.log(resp2.docs.map(prod=>({...prod.data()})))
-      //       // .then(resp => console.log(resp.docs.map(prod=>({id:prod.id, ...prod.data(), ...prod.categoria}))))
-      //       .then(resp => setProductos(resp.docs.map(prod=>({...prod.data()}))))
-      //       .catch(()=>console.error())
-      //       .finally(()=> setLoading(false))
-      //   }
-      // },[idCategoria])
-      // useEffect(()=>{
-      //       if (idProducto) {
-      //         gFetch()  
-      //         .then(resSgte => setProductos(resSgte.find(producto=>producto.id===idProducto)))
-      //         .catch(err => console.log(err))
-      //         .finally(()=> setLoading(false))
-      //       } else {
-      //         gFetch()  
-      //         .then(resSgte => setProductos(resSgte))
-      //         .catch(err => console.log(err))
-      //         .finally(()=> setLoading(false))
-      //       }
+        //   const queryFilter = query(queryCollector, where('categoria', '==', idCategoria))
             
-      //   }, [idProducto])
+        //   // const queryFilter = query(queryCollector, where('precio', '>', 85000), limit(5), orderBy('precio', 'desc'))
 
-     const {nombre, imagen, precio, detalleu, detalled, detallet, stock, id} = productos
+        //   getDocs(queryFilter)
+        //       .then(resp => setProductos(resp.docs.map(prod=>({id:prod.id, ...prod.data()}))))
 
-     const onAdd = (count) => {
-        addItem ({...productos, count})
+        //       .catch(()=>console.error())
+        //       .finally(()=> setLoading(false))
+        //   } else {
+        //       const db = getFirestore()
+        //       const queryCollector = collection(db, 'products')
+        //       getDocs(queryCollector)
+        //       // .then(resp2=>console.log(resp2.docs.map(prod=>({...prod.data()})))
+        //       // .then(resp => console.log(resp.docs.map(prod=>({id:prod.id, ...prod.data(), ...prod.categoria}))))
+        //       .then(resp => setProductos(resp.docs.map(prod=>({...prod.data()}))))
+        //       .catch(()=>console.error())
+        //       .finally(()=> setLoading(false))
+        //   }
+        // },[idCategoria])
+        // useEffect(()=>{
+        //       if (idProducto) {
+        //         gFetch()  
+        //         .then(resSgte => setProductos(resSgte.find(producto=>producto.id===idProducto)))
+        //         .catch(err => console.log(err))
+        //         .finally(()=> setLoading(false))
+        //       } else {
+        //         gFetch()  
+        //         .then(resSgte => setProductos(resSgte))
+        //         .catch(err => console.log(err))
+        //         .finally(()=> setLoading(false))
+        //       }
+                
+        //   }, [idProducto])
+
+        const {nombre, imagen, precio, detalleu, detalled, detallet, stock, id} = products
+
+        const onAdd = (count) => {
+        
+        addItem ({...products, count})
         setIsCount(false)
+
+        if (errores.length) {
+            setTimeout(() => {
+                errores.splice(0,errores.length)
+            }, 2000);
+        }
     }
 
   return (  
@@ -88,11 +96,15 @@ export const  ItemDetail = ({productos}) => {
                 <p className="texto-detalle">{detalled}</p>
                 <p className="texto-detalle">{detallet}</p>
                 <p className="texto-detalle"> Ultimas <span style={{color:'red'}}>{stock} unidades en Stock!</span></p>     
-
+               
             </div> 
             <div className='centrar-boton'>
-            {isCount ?  
-                    <ItemCount onAdd={onAdd} stock={productos.stock} key={id}/>
+            {errores.length ? <Error>{errores}</Error> : null}
+            {isCount ? <>
+
+                            <ItemCount onAdd={onAdd} stock={products.stock} key={id}/>
+                            
+                        </>
                         :
                     <div>
                             <br/>

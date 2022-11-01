@@ -1,60 +1,92 @@
-import { collection, doc, getFirestore, updateDoc } from "firebase/firestore"
+import { addDoc, collection, documentId, getDocs, getFirestore, query, updateDoc, where, writeBatch } from "firebase/firestore"
 import { useState } from "react"
 import Button from "react-bootstrap/esm/Button"
 import { Link } from "react-router-dom"
 import { useCartContext } from "../../context/cartContext"
+import Error from "../../Error/Error"
 import './CarritoPage.css'
+
+
 
 
 export default function CarritoPage(){
 
-    const { cartList, vaciarCarrito, precioTotal, removeItem} = useCartContext()
+    const { cartList, setCartList, clearCart, totalPrice, removeProd} = useCartContext()
+
+    const [error, setError] = useState(false)
+    const [errorMail, setErrorMail] = useState(false)
+    const [isId, setIsId] = useState('')
 
     const  [dataForm, setDataForm] = useState({
         name: '',
         phone: '',
-        email:''
-
+        email:'',
+        remail: ''
     })
 
-    const generarOrden = async (e)=>{
+    const orderGenerator = async (e)=>{
         e.preventDefault()
-
-        console.log('Orden Generada')
-        const orden = {}
+        if (dataForm.name !== '' && dataForm.phone !== '' && dataForm.email !== '' && dataForm.remail !== ''){
+            if (dataForm.email === dataForm.remail){
+    
+                const orden = {}
+                
+                orden.buyer= {
+                    name: dataForm.name,
+                    phone: dataForm.phone,
+                    email: dataForm.email
+                }
         
-        orden.buyer= {
-            name: dataForm.name,
-            phone: dataForm.phone,
-            email: dataForm.email
-        }
+                orden.products= cartList.map(prod => {
+                    const {id, nombre, precio, count} = prod
+                    return {id, nombre, precio, count}
+                })
+        
+                orden.total= totalPrice()
+        
+                const db = getFirestore()
+                const orders = collection(db, 'orders')
+                addDoc(orders, orden) 
+                .then(resp => setIsId(resp.id))
+                .catch(err => console.log(err))
+                .finally(()=>setCartList([]))
+            } else {
+                setErrorMail(true)
+                setTimeout(() => {
+                    setErrorMail(false)
+                }, 3000);
+            }
 
-        orden.products= cartList.map(prod => {
-            const {id, name: title, price} = prod
-            return {id, title, price}
-        })
-
-        orden.total= precioTotal()
+        } else {
+                setError(true)
+                setTimeout(() => {
+                    setError(false)
+                }, 3000);
+            }
 
         const db = getFirestore()
-        const orders = collection(db, 'orders')
-        .then(resp => console.log('resp'))
-        .catch(err => console.log(err))
-        .finally(() => vaciarCarrito())
-    }
+        const queryCollection = collection(db, 'productos')
 
-  //update
-  // const db = getFirestore()
-  // const orderDoc = doc(db, 'productos', 'DQI3UNleLD3DZElHNwwE')
-  // updateDoc(orderDoc, {
-  //   stock: (stock-1)
-  // })
-  // .then(resp=> console.log('prod act'))
-  // .catch(err=> console.log(err))
+        const queryActulizarStock = await query(
+          queryCollection,
+          where( documentId() , 'in', cartList.map(prod => prod.id) )          
+        )
+
+        const batch = writeBatch(db)
+
+        await getDocs(queryActulizarStock)
+          .then(resp => resp.docs.forEach(res => batch.update(res.ref, {
+              stock: res.data().stock - cartList.find(prod => prod.id === res.id).count
+        }) ))
+
+        batch.commit()
+        console.log('stock actualizado')
+
+        }
+
+
 
   const handleInputChange = (e) => {
-    console.log(e.target.name)
-    console.log(e.target.value)
     setDataForm({
         ...dataForm,
         [e.target.name]: e.target.value
@@ -63,29 +95,35 @@ export default function CarritoPage(){
 
   return ( 
     <>
+    { isId && <p className="order">Su orden fue generada con Exito: <span className="order-span">{isId}</span> </p>}
     { cartList.length ? 
             <div className="centrado">
             <h1 style={{textAlign: 'center', marginTop: '40px', marginBottom:'50px'}}>Finaliza tu compra!</h1>
             <ul className="lista">
-                {cartList.map(producto => 
-                <li key={producto.id}>
+                {cartList.map(product => 
+                <li key={product.id}>
                     <div 
                     className="flex-carrito" > 
-                        {<img className='card-img-carrito' src={producto.imagen} alt="" /> } 
+                        {<img className='card-img-carrito' src={product.imagen} alt="" /> } 
                         <div className="flex-lista">
-                            <p className="parrafos">Producto: {producto.nombre}</p>
-                            <p className="parrafos">Precio: {producto.precio} </p>
-                            <p className="parrafos">Cantidad: {producto.count}</p> 
+                            <p className="parrafos">Producto: {product.nombre}</p>
+                            <p className="parrafos">Precio: {product.precio} </p>
+                            <p className="parrafos">Cantidad: {product.count}</p> 
                         </div>
-                        <Button className="boton" variant='danger' onClick={()=>removeItem(producto.id)}> Quitar </Button>
+                        <Button className="boton" variant='danger' onClick={()=>removeProd(product.id)}> Quitar </Button>
                     </div>
                 </li> 
             )}
             </ul>
 
             <div className="footer">
-            <h3>Total: ${precioTotal()}</h3>
-            <form onSubmit={generarOrden}>
+            <h3>Total: ${totalPrice()}</h3>
+            
+            <form 
+                onSubmit={orderGenerator}
+                className='formulario'>
+                {error && <Error> Todos los campos son Obligatorios </Error> }
+                {errorMail && <Error> El Mail debe ser el mismo </Error> }  
                 <input 
                     type="text" 
                     name="name"
@@ -94,7 +132,7 @@ export default function CarritoPage(){
                     onChange={handleInputChange}
                 />
                 <input 
-                    type="text"
+                    type="number"
                     name="phone" 
                     value={dataForm.phone}
                     placeholder="Teléfono" 
@@ -107,16 +145,24 @@ export default function CarritoPage(){
                     placeholder="Email" 
                     onChange={handleInputChange}
                 />
-                <Button type="submit">Generar Orden</Button>
+                <input 
+                    type="text" 
+                    name="remail"
+                    value={dataForm.remail}
+                    placeholder="Confirmar Email" 
+                    onChange={handleInputChange}
+                />
+                <Button variant='success' type="submit">Generar Orden</Button>
             </form>
-                <div className="d-grid ">
-                <Button variant='danger' onClick={vaciarCarrito} size="lg" className="d-grid">Vaciar carrito</Button>
-                </div>   
+                  
             </div>
+            <div className="d-grid ">
+                <Button variant='danger' onClick={clearCart} size="lg" className="d-grid">Vaciar carrito</Button>
+                </div> 
             </div>
         :
-            <div>
-                <h1>Agrega un Articulo para empezar a comprar</h1>
+            <div className="carrito-empty">
+                <p>Agrega un Articulo para empezar a comprar</p>
                 <Link to='/'>
                     <Button>Empezar a comprar</Button>
                 </Link>

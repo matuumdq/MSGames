@@ -3,12 +3,12 @@ import { useCartContext } from '../context/cartContext';
 
 
 export const CartWidget = () => {
-  const { cartList, cantidadTotal } = useCartContext()
+  const { cartList, totalCount } = useCartContext()
 
   return (
     <>
     {cartList.length ? 
-        <div className='iconSize'> {cantidadTotal()} <AiOutlineShoppingCart size={35}/>
+        <div className='iconSize'> {totalCount()} <AiOutlineShoppingCart size={35}/>
         </div> 
     :
     <div className='iconSize'>

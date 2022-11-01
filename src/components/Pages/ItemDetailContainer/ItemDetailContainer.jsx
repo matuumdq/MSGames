@@ -7,14 +7,14 @@ import  {ItemDetail} from '../../ItemDetail/ItemDetail'
 export const ItemDetailContainer = () => {
 
     const { idProducto } = useParams()
-    const [ productos, setProductos ] = useState({})
+    const [ products, setProducts ] = useState({})
     const [ loading, setLoading ] = useState(true)
     
   // useEffect(() => {
   //   const db = getFirestore()
-  //   const queryDoc = doc(db, 'productos', idProducto)
+  //   const queryDoc = doc(db, 'products', idProducto)
   //   getDoc(queryDoc)
-  //     .then(resp=> setProductos(resp => ({id: resp.id, ...resp.data()})))
+  //     .then(resp=> setProducts(resp => ({id: resp.id, ...resp.data()})))
   //     .catch(()=>console.error())
   //     .finally(()=> setLoading(false))
   //     console.log(idProducto)
@@ -22,9 +22,9 @@ export const ItemDetailContainer = () => {
 
   // useEffect(() => {
   //   const db = getFirestore()
-  //   const queryDoc = doc(db, 'productos', idProducto)
+  //   const queryDoc = doc(db, 'products', idProducto)
   //   getDoc(queryDoc)
-  //     .then(resp=> setProductos({id: resp.id, ...resp.data()}))
+  //     .then(resp=> setProducts({id: resp.id, ...resp.data()}))
   //     .catch(()=>console.error())
   //     .finally(()=> setLoading(false))
   // }, [])
@@ -36,7 +36,7 @@ export const ItemDetailContainer = () => {
         const db = getFirestore()
         const queryDoc = doc(db, 'productos', idProducto)
         getDoc(queryDoc)
-        .then(resp => setProductos( {id: resp.id, ...resp.data()} ))
+        .then(resp => setProducts( {id: resp.id, ...resp.data()} ))
         .catch(err => console.log(err))
         .finally(() => setLoading(false))
     },[])
@@ -46,7 +46,7 @@ export const ItemDetailContainer = () => {
         {loading ? 
             <Loading/>
         :
-            <ItemDetail productos={productos} key={productos.id}/>
+            <ItemDetail products={products} key={products.id}/>
         }
     </div>
     )
