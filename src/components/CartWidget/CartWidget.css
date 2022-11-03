@@ -1,0 +1,18 @@
+.flex{
+      display: flex;
+}
+
+.iconSize {
+      background-color: grey;
+      color: black;
+      width: 20px;
+      border-radius: 15px;
+      margin: 1px 5px 10px 10px;
+      text-align: center;
+      text-decoration: none !important;
+}
+
+.iconSize a:hover, a:visited, a:link, a:active {
+      text-decoration: none;
+}
+

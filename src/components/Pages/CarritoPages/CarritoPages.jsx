@@ -1,22 +1,16 @@
-import { addDoc, collection, documentId, getDocs, getFirestore, query, updateDoc, where, writeBatch } from "firebase/firestore"
-import { useState } from "react"
+import { addDoc, collection, documentId, getDoc, getDocs, getFirestore, query, updateDoc, where, writeBatch } from "firebase/firestore"
+import { useEffect, useState } from "react"
 import Button from "react-bootstrap/esm/Button"
 import { Link } from "react-router-dom"
+import Orders from "../../Orders/Orders"
 import { useCartContext } from "../../context/cartContext"
 import Error from "../../Error/Error"
 import './CarritoPage.css'
 
-
-
-
 export default function CarritoPage(){
-
-    const { cartList, setCartList, clearCart, totalPrice, removeProd} = useCartContext()
-
+    const { cartList, setCartList, isId, setIsId, clearCart, totalPrice, removeProd} = useCartContext()
     const [error, setError] = useState(false)
     const [errorMail, setErrorMail] = useState(false)
-    const [isId, setIsId] = useState('')
-
     const  [dataForm, setDataForm] = useState({
         name: '',
         phone: '',
@@ -28,9 +22,8 @@ export default function CarritoPage(){
         e.preventDefault()
         if (dataForm.name !== '' && dataForm.phone !== '' && dataForm.email !== '' && dataForm.remail !== ''){
             if (dataForm.email === dataForm.remail){
-    
                 const orden = {}
-                
+
                 orden.buyer= {
                     name: dataForm.name,
                     phone: dataForm.phone,
@@ -47,44 +40,37 @@ export default function CarritoPage(){
                 const db = getFirestore()
                 const orders = collection(db, 'orders')
                 addDoc(orders, orden) 
-                .then(resp => setIsId(resp.id))
-                .catch(err => console.log(err))
-                .finally(()=>setCartList([]))
+                    .then(resp => setIsId([...isId, {id: resp.id}]))
+                    .catch(err => console.log(err))
+                    .finally(()=>setCartList([]))
             } else {
                 setErrorMail(true)
-                setTimeout(() => {
-                    setErrorMail(false)
-                }, 3000);
+                    setTimeout(() => {
+                        setErrorMail(false)
+                    }, 3000);
+                return
             }
-
         } else {
                 setError(true)
-                setTimeout(() => {
-                    setError(false)
-                }, 3000);
-            }
+                    setTimeout(() => {
+                        setError(false)
+                    }, 3000);
+                    return
+                }
 
         const db = getFirestore()
         const queryCollection = collection(db, 'productos')
-
         const queryActulizarStock = await query(
           queryCollection,
           where( documentId() , 'in', cartList.map(prod => prod.id) )          
         )
-
         const batch = writeBatch(db)
-
         await getDocs(queryActulizarStock)
-          .then(resp => resp.docs.forEach(res => batch.update(res.ref, {
-              stock: res.data().stock - cartList.find(prod => prod.id === res.id).count
-        }) ))
-
+            .then(resp => resp.docs.forEach(res => batch.update(res.ref, {
+            stock: res.data().stock - cartList.find(prod => prod.id === res.id).count
+        })))
         batch.commit()
-        console.log('stock actualizado')
-
         }
-
-
 
   const handleInputChange = (e) => {
     setDataForm({
@@ -93,9 +79,10 @@ export default function CarritoPage(){
     })
 }
 
-  return ( 
-    <>
-    { isId && <p className="order">Su orden fue generada con Exito: <span className="order-span">{isId}</span> </p>}
+const lastOrder = [...isId].pop() 
+
+return ( 
+    <>  
     { cartList.length ? 
             <div className="centrado">
             <h1 style={{textAlign: 'center', marginTop: '40px', marginBottom:'50px'}}>Finaliza tu compra!</h1>
@@ -115,10 +102,8 @@ export default function CarritoPage(){
                 </li> 
             )}
             </ul>
-
-            <div className="footer">
-            <h3>Total: ${totalPrice()}</h3>
-            
+        <div className="footer">
+        <h3>Total: ${totalPrice()}</h3>
             <form 
                 onSubmit={orderGenerator}
                 className='formulario'>
@@ -158,16 +143,23 @@ export default function CarritoPage(){
             </div>
             <div className="d-grid ">
                 <Button variant='danger' onClick={clearCart} size="lg" className="d-grid">Vaciar carrito</Button>
-                </div> 
-            </div>
-        :
-            <div className="carrito-empty">
-                <p>Agrega un Articulo para empezar a comprar</p>
-                <Link to='/'>
-                    <Button>Empezar a comprar</Button>
-                </Link>
-            </div>
+            </div> 
+        </div>
+    :
+        <div className="carrito-empty">
+            <p>Agrega un Articulo para empezar a comprar</p>
+            <Link to='/'>
+                <Button>Empezar a comprar</Button>
+            </Link>
+        </div>
     }
+    {isId.length && 
+        <div>
+            <p className="order">Su orden fue generada con Exito: <span className="order-span">{lastOrder.id}</span> </p>
+            <Orders/>
+        </div>
+    }
+    
     </>
   )
 }

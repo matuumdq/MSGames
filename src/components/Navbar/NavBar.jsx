@@ -1,15 +1,10 @@
-// import { FaBeer } from "@react-icons/all-files/fa/FaBeer";
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav'
 import { Link } from 'react-router-dom';
 import { CartWidget } from '../CartWidget/CartWidget';
-import { useCartContext } from '../context/cartContext';
-
 
 const NavBar = () => {
-
-  const { cartList } = useCartContext()
       return (
             <>
               <Navbar sticky="top" bg="dark" variant="dark" className='pr-5'>

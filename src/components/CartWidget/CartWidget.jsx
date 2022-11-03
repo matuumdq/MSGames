@@ -1,5 +1,6 @@
 import { AiOutlineShoppingCart } from 'react-icons/ai';
 import { useCartContext } from '../context/cartContext';
+import './CartWidget.css'
 
 
 export const CartWidget = () => {
@@ -8,11 +9,13 @@ export const CartWidget = () => {
   return (
     <>
     {cartList.length ? 
-        <div className='iconSize'> {totalCount()} <AiOutlineShoppingCart size={35}/>
-        </div> 
+      <div className='flex'> 
+        <div className='iconSize'> {totalCount()} </div>
+        <AiOutlineShoppingCart color='grey' size={35}/>
+      </div>     
     :
-    <div className='iconSize'>
-        <AiOutlineShoppingCart size={35}/>
+        <div>
+        <AiOutlineShoppingCart color='grey' size={35}/>
         </div>
     }
     

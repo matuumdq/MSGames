@@ -1,6 +1,5 @@
 import { useEffect } from "react"
 import { useContext, createContext, useState } from "react"
-import Error from "../Error/Error"
 
 
 const CartContext = createContext([])
@@ -11,6 +10,7 @@ const CartContextProvider = ({children}) => {
 
       const [cartList, setCartList] = useState([])
       const errores = []
+      const [isId, setIsId] = useState([])
 
       useEffect(()=> {
             const takeLS = () => {
@@ -23,6 +23,18 @@ const CartContextProvider = ({children}) => {
       useEffect(() => {
             localStorage.setItem('cartList', JSON.stringify(cartList))
       }, [cartList])
+
+      useEffect(()=> {
+            const takeLSOrders = () => {
+                  const LSOrders = JSON.parse(localStorage.getItem('isId')) ?? []
+                  setIsId(LSOrders)
+            }
+            takeLSOrders()
+      },[])
+
+      useEffect(() => {
+            localStorage.setItem('isId', JSON.stringify(isId))
+      }, [isId])
       
 
       const addItem = async(producto) => {
@@ -63,19 +75,19 @@ const CartContextProvider = ({children}) => {
             }
       }
 
-
       return (
             <CartContext.Provider value = { { 
                   cartList,
                   setCartList,
                   addItem,
+                  isId, 
+                  setIsId,
                   errores,
                   totalPrice,
                   totalCount,
                   removeProd,
                   clearCart
             }}>
-
                   {children}
             </CartContext.Provider>
       )

@@ -10,28 +10,6 @@ export const ItemDetailContainer = () => {
     const [ products, setProducts ] = useState({})
     const [ loading, setLoading ] = useState(true)
     
-  // useEffect(() => {
-  //   const db = getFirestore()
-  //   const queryDoc = doc(db, 'products', idProducto)
-  //   getDoc(queryDoc)
-  //     .then(resp=> setProducts(resp => ({id: resp.id, ...resp.data()})))
-  //     .catch(()=>console.error())
-  //     .finally(()=> setLoading(false))
-  //     console.log(idProducto)
-  // }, [idProducto])
-
-  // useEffect(() => {
-  //   const db = getFirestore()
-  //   const queryDoc = doc(db, 'products', idProducto)
-  //   getDoc(queryDoc)
-  //     .then(resp=> setProducts({id: resp.id, ...resp.data()}))
-  //     .catch(()=>console.error())
-  //     .finally(()=> setLoading(false))
-  // }, [])
-
-
-    //traer un producto de firebase
-    
     useEffect(() => {
         const db = getFirestore()
         const queryDoc = doc(db, 'productos', idProducto)
